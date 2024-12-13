@@ -27,22 +27,66 @@ function AñadirOrganizador()
 function buscarEventos($nombre_evento)
 {
     global $conexion;
-
-    $nombre_evento = $conexion->real_escape_string($nombre_evento);
+    $nombre_evento = $conexion->real_escape_string($nombre_evento); // Protege contra inyecciones SQL
     $sql = $conexion->query("SELECT * FROM eventos WHERE nombre_evento LIKE '%$nombre_evento%'");
-    
-    return $sql->fetch_all(MYSQLI_ASSOC); // Retorna todos los resultados como un array asociativo
+
+    // Retorna los resultados si hay eventos encontrados
+    if ($sql->num_rows > 0) {
+        return $sql->fetch_all(MYSQLI_ASSOC); // Devuelve los resultados
+    } else {
+        return null; // Si no hay resultados, devuelve null
+    }
 }
 
 if (isset($_GET["nombre_evento"])) {
-    $id = intval($_GET["nombre_evento"]);
-    buscarEventos($nombre_evento);
+    $nombre_evento = $_GET["nombre_evento"];
+    $resultados = buscarEventos($nombre_evento);
+
+    // Verificamos si se encontraron resultados
+    if ($resultados) {
+        // Estilos de Bootstrap para la tabla
+        echo "<table class='table table-bordered table-striped table-hover mt-5'>";
+        echo "<thead class='table-dark'><tr><th>ID</th><th>Nombre del Evento</th><th>Tipo de Deporte</th><th>Fecha</th><th>Hora</th><th>Ubicación</th><th>Organizador</th></tr></thead>";
+        echo "<tbody>";
+
+        foreach ($resultados as $evento) {
+            echo "<tr>";
+            echo "<td>" . $evento['id'] . "</td>";
+            echo "<td>" . $evento['nombre_evento'] . "</td>";
+            echo "<td>" . $evento['tipo_deporte'] . "</td>";
+            echo "<td>" . $evento['fecha'] . "</td>";
+            echo "<td>" . $evento['hora'] . "</td>";
+            echo "<td>" . $evento['ubicacion'] . "</td>";
+
+            // Obtener el nombre del organizador
+            $id_organizador = $evento['id_organizador'];
+            $sqlOrganizador = $conexion->query("SELECT nombre FROM organizadores WHERE id = $id_organizador");
+            $organizador = $sqlOrganizador->fetch_object();
+            echo "<td>" . $organizador->nombre . "</td>";
+
+            echo "</tr>";
+        }
+
+        echo "</tbody>";
+        echo "</table>";
+    } else {
+        echo "<div class='alert alert-danger'>No se encontró ningún evento con ese nombre.</div>";
+    }
 }
+
+if (isset($_GET["nombre_evento"]) && !empty($_GET["nombre_evento"])) {
+    $nombre_evento = $_GET["nombre_evento"];
+    $resultados = buscarEventos($nombre_evento);
+} else {
+    echo "Por favor, ingresa un nombre de evento para buscar.";
+}
+
 
 // Verifica si se ha enviado el formulario
 if (isset($_POST["registrarOrganizador"])) {
     AñadirOrganizador();
 }
+
 
 //Eliminar organizadores
 // Función para eliminar organizador
@@ -192,6 +236,8 @@ if (isset($_GET['id'])) {
     $evento = editarEvento();
 }
 
+
+
 // HTML para el formulario de edición de eventos
 ?>
 <!DOCTYPE html>
@@ -244,9 +290,8 @@ if (isset($_GET['id'])) {
             <button type="submit" class="btn btn-success" name="btnModificarEvento" value="ok">Guardar Cambios</button>
         </form>
     <?php else: ?>
-        <div class="alert alert-danger mt-4">
-            <p>No se encontró el evento o no se proporcionó un ID válido.</p>
-            <a href="index.php" class="btn btn-primary mt-2">Volver a la lista de eventos</a>
+        <div class="alert alert-primary text-center  mt-4">
+            <a href="index.php" class="btn btn-success mt-2">Volver a la lista de eventos</a>
         </div>
     <?php endif; ?>
 </div>

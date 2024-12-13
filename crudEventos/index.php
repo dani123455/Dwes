@@ -23,7 +23,7 @@
 <div class="container my-5">
     <h1 class="text-center mb-4">Gestión de Eventos Deportivos</h1>
 
-    <form method="POST" action="procesar.php">
+    <form method="GET" action="procesar.php">
             <div class="input-group mb-3">
                 <input type="text" name="nombre_evento" class="form-control border-black" placeholder="Buscar evento" aria-label="Buscar evento" aria-describedby="button-addon2">
                 <button class="btn btn-primary" type="submit" id="button-addon2">Buscar</button>
@@ -31,19 +31,6 @@
         </form>
 
         <h3>Resultados de la Búsqueda</h3>
-
-        <?php if (isset($nombre_evento)): ?>
-            <h2>Resultados para: "<?php echo htmlspecialchars($nombre_evento); ?>"</h2>
-            <?php if (count($resultados) > 0): ?>
-                <ul class="list-group">
-                    <?php foreach ($resultados as $resultado): ?>
-                        <li class="list-group-item"><?php echo htmlspecialchars($resultado); ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php else: ?>
-                <p>No se encontraron eventos que coincidan con tu búsqueda.</p>
-            <?php endif; ?>
-        <?php endif; ?>
         
     <h2>Organizadores</h2>
     <table class="table table-bordered">
@@ -99,14 +86,7 @@
     <button type="submit" class="btn btn-primary" name="registrarOrganizador" value="botonOrganizador">Añadir Organizador</button>
     </form>
     
-    <div class="container mt-5">
-    <form method="GET" action="index.php" class="my-4">
-    <div class="input-group">
-        <input type="text" name="buscar" class="form-control" placeholder="Buscar evento" value="<?= isset($_GET['buscar']) ? $_GET['buscar'] : '' ?>">
-        <button type="submit" class="btn btn-primary">Buscar</button>
-    </div>
-    </form>
-    </div>
+
 
     <h2>Eventos</h2>
     <table class="table table-bordered">
