@@ -8,7 +8,7 @@ if ($response !== false) {
 
     echo "<table border='1' style='width: 70%; margin: 20px auto; text-align: left;'>";
     echo "<thead>";
-    echo "<tr style='background-color: #f2f2f2;'>";
+    echo "<tr style='background-color:rgb(118, 212, 94);'>";
     echo "<th style='padding: 10px;'>Clave</th>";
     echo "<th style='padding: 10px;'>Valor</th>";
     echo "</tr>";
@@ -16,7 +16,7 @@ if ($response !== false) {
     echo "<tbody>";
 
     foreach ($person as $key => $value) {
-        echo "<tr>";
+        echo "<tr style='background-color:rgb(211, 226, 141);'>";
         echo "<td style='padding: 10px;'>$key</td>";
         echo "<td style='padding: 10px;'>$value</td>";
         echo "</tr>";
